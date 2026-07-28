@@ -1,0 +1,37 @@
+Atal Pension Yojana (APY)
+
+Description:
+Atal Pension Yojana is a government-backed pension scheme mainly targeted at
+workers in the unorganized sector, such as daily wage laborers, domestic
+workers, and gig/informal workers who don't have access to formal
+employer-sponsored retirement plans.
+
+Benefits:
+Subscribers receive a guaranteed minimum monthly pension ranging from
+Rs. 1,000 to Rs. 5,000 after the age of 60, depending on the contribution
+amount and the age at which they join. The pension amount is fixed by the
+subscriber at the time of enrollment, and the government guarantees this
+minimum amount. In the event of the subscriber's death, the spouse receives
+the same pension amount, and after both die, the nominee receives the
+accumulated pension corpus.
+
+Eligibility:
+- Any Indian citizen between 18 and 40 years of age.
+- Must have a savings bank account or post office savings account.
+- Must not be an income taxpayer (this condition was added for enrollments
+  from October 2022 onward).
+
+Required Documents:
+- Aadhaar card
+- Active savings bank account or post office savings account passbook
+- Mobile number linked to the bank account
+
+Application Process:
+1. Visit your bank branch or post office where you hold a savings account.
+2. Fill out the APY registration form, selecting your desired monthly
+   pension amount.
+3. Provide your Aadhaar and mobile number for verification.
+4. The chosen contribution amount is auto-debited from your bank account
+   monthly, quarterly, or half-yearly until you turn 60.
+
+Official Website: https://www.npscra.nsdl.co.in/scheme-details.php

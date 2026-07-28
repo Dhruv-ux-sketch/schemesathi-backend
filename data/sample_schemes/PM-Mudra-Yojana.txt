@@ -1,0 +1,46 @@
+Pradhan Mantri Mudra Yojana (PMMY)
+
+Description:
+PMMY provides collateral-free loans to non-corporate, non-farm small and
+micro enterprises for income-generating activities in manufacturing, trading,
+and services, including activities allied to agriculture. It aims to fund
+the "unfunded" — small entrepreneurs who typically can't access formal
+bank credit.
+
+Benefits:
+Loans are offered under three categories based on the growth stage of the
+business:
+- Shishu: loans up to Rs. 50,000 for very early-stage businesses.
+- Kishor: loans from Rs. 50,001 to Rs. 5 lakh for growing businesses.
+- Tarun: loans from Rs. 5,00,001 to Rs. 10 lakh for established businesses
+  looking to expand.
+No collateral is required for these loans, and there is no processing fee
+for Shishu category loans.
+
+Eligibility:
+- Any Indian citizen with a business plan for a non-farm income-generating
+  activity such as manufacturing, processing, trading, or services.
+- Includes small manufacturing units, shopkeepers, fruit/vegetable vendors,
+  artisans, food service units, and repair shops.
+- The business should not be a corporate entity (i.e., proprietorships,
+  partnerships, and small firms are eligible, not large private/public
+  limited companies).
+
+Required Documents:
+- Duly filled Mudra loan application form
+- Identity proof (Aadhaar, voter ID, PAN, passport, driving license)
+- Address proof
+- Business plan or proof of existing business (if applicable)
+- Quotations of machinery/goods to be purchased (if applicable)
+- Passport-size photographs
+
+Application Process:
+1. Approach any public sector bank, private bank, regional rural bank,
+   cooperative bank, or microfinance institution.
+2. Alternatively, apply online through the official Mudra portal or the
+   Udyamimitra portal.
+3. Submit the application along with required documents and business plan.
+4. Upon approval, the loan is disbursed along with a Mudra Card, which can
+   be used like a debit card for business expenses.
+
+Official Website: https://www.mudra.org.in

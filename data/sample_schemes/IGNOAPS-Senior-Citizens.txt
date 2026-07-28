@@ -1,0 +1,39 @@
+Indira Gandhi National Old Age Pension Scheme (IGNOAPS)
+
+Description:
+IGNOAPS is a central government scheme under the National Social Assistance
+Programme (NSAP) that provides monthly financial assistance to elderly
+citizens living below the poverty line, helping them meet basic needs in the
+absence of a regular income or family support.
+
+Benefits:
+Eligible beneficiaries receive a monthly pension. The central government
+contributes Rs. 200 per month for beneficiaries aged 60-79, and Rs. 500 per
+month for beneficiaries aged 80 and above. Many state governments supplement
+this amount further from their own funds, so the actual amount received
+often varies by state and can be significantly higher than the central
+contribution alone.
+
+Eligibility:
+- The applicant must be 60 years of age or older.
+- The applicant's family must belong to a household living Below the Poverty
+  Line (BPL), as per criteria defined by the state government or the
+  Socio-Economic Caste Census.
+- The applicant should not be receiving any other government pension.
+
+Required Documents:
+- Age proof (Aadhaar card, birth certificate, or voter ID)
+- BPL certificate or ration card indicating BPL status
+- Bank account or post office account details for direct benefit transfer
+- Passport-size photograph
+
+Application Process:
+1. Obtain the IGNOAPS application form from the local Gram Panchayat,
+   Municipal office, or the Social Welfare Department.
+2. Fill in the form and attach age proof, BPL certificate, and bank details.
+3. Submit the form to the local revenue officer or Panchayat for
+   verification.
+4. Once approved, the pension amount is credited directly to the
+   beneficiary's bank or post office account every month.
+
+Official Website: https://nsap.nic.in

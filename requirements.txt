@@ -1,0 +1,29 @@
+fastapi==0.115.0
+uvicorn[standard]==0.30.6
+python-dotenv==1.0.1
+pydantic==2.9.2
+pydantic-settings==2.5.2
+
+# RAG / vector store
+chromadb==0.5.5
+sentence-transformers==3.1.1
+
+# document processing
+pypdf==5.0.1
+
+# LLM clients (only the one you use needs a real key)
+openai==1.51.0
+anthropic==0.36.2
+
+# misc
+python-multipart==0.0.12
+
+# database + auth
+sqlalchemy==2.0.35
+psycopg2-binary==2.9.9
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
+
+# rate limiting
+slowapi==0.1.9

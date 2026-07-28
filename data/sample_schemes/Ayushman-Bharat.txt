@@ -1,0 +1,33 @@
+Ayushman Bharat - Pradhan Mantri Jan Arogya Yojana (AB PM-JAY)
+
+Description:
+Ayushman Bharat PM-JAY is the world's largest health assurance scheme, aiming
+to provide free access to health insurance coverage for economically
+vulnerable people in India, covering secondary and tertiary care hospitalization.
+
+Benefits:
+Provides health cover of Rs. 5 lakh per family per year for secondary and
+tertiary care hospitalization, cashless and paperless access to services at
+the point of care, at any empanelled public or private hospital across India.
+
+Eligibility:
+Eligibility is primarily determined using the Socio-Economic Caste Census
+(SECC) 2011 database for both rural and urban areas, covering deprived rural
+families and identified occupational categories in urban areas. There is no
+cap on family size or age. Beneficiaries can check their eligibility on the
+official portal using their mobile number or ration card.
+
+Required Documents:
+- Aadhaar card
+- Ration card or SECC verification
+- Mobile number for OTP verification
+- Any government-issued photo ID
+
+Application Process:
+1. Check eligibility on the PM-JAY website or via the Ayushman Bharat mobile app.
+2. If eligible, visit a nearby empanelled hospital or Common Service Centre.
+3. Complete e-KYC verification using Aadhaar.
+4. Receive the Ayushman Card, which can be used for cashless treatment at
+   empanelled hospitals.
+
+Official Website: https://pmjay.gov.in
