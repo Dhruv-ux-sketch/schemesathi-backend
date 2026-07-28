@@ -10,6 +10,9 @@ from app.db import init_db
 from app.rate_limit import limiter
 from app.routes import chat, schemes, auth, chats, bookmarks
 
+print(f"[DEBUG] ALLOWED_ORIGINS raw: {settings.ALLOWED_ORIGINS!r}")
+print(f"[DEBUG] allowed_origins_list: {settings.allowed_origins_list!r}")
+
 app = FastAPI(
     title="SchemeSathi API",
     description="AI assistant for discovering and understanding government schemes",
