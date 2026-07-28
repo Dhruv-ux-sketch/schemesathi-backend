@@ -5,8 +5,11 @@ pydantic==2.9.2
 pydantic-settings==2.5.2
 
 # RAG / vector store
+# Note: sentence-transformers was removed - it pulled in the full PyTorch
+# library, which alone needs 500MB+ RAM to load. ChromaDB's built-in
+# DefaultEmbeddingFunction (used in vector_store.py) does the same job via
+# lightweight onnxruntime instead, fitting comfortably in Render's free tier.
 chromadb==0.5.5
-sentence-transformers==3.1.1
 
 # document processing
 pypdf==5.0.1

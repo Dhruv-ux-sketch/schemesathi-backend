@@ -1,9 +1,13 @@
 """
 Vector store wrapper around ChromaDB.
 
-Embeddings are generated locally via sentence-transformers, so this whole
-module works with NO API key. Only the answer-generation step (llm.py)
-needs a paid key, and only once you're ready for that.
+Embeddings use ChromaDB's built-in ONNX-based default embedding function
+(the same MiniLM model as before, but via onnxruntime instead of PyTorch).
+This is a deliberate choice: sentence-transformers pulls in the full PyTorch
+library, which alone can need 500MB+ of RAM to load - more than the entire
+512MB memory limit on Render's free tier. The ONNX version does the exact
+same embedding job in a fraction of the memory, with no API key needed
+either way.
 """
 import uuid
 from functools import lru_cache
@@ -17,12 +21,11 @@ from app.config import settings
 @lru_cache(maxsize=1)
 def get_embedding_function():
     """
-    Cached so the (fairly large) sentence-transformers model is loaded once
-    per process, not once per request.
+    Cached so the embedding model is loaded once per process, not once per
+    request. Uses Chroma's built-in lightweight ONNX embedding function -
+    no torch, no sentence-transformers, much lower memory footprint.
     """
-    return embedding_functions.SentenceTransformerEmbeddingFunction(
-        model_name=settings.EMBEDDING_MODEL
-    )
+    return embedding_functions.DefaultEmbeddingFunction()
 
 
 @lru_cache(maxsize=1)
