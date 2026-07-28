@@ -55,13 +55,16 @@ def add_chunks(chunks: list[str], scheme_name: str, source_file: str) -> int:
     return len(chunks)
 
 
-def query(question: str, top_k: int | None = None, where: dict | None = None) -> list[dict]:
+def query(question: str, top_k: int | None = None, where: dict | None = None,
+          min_score: float | None = None) -> list[dict]:
     """
     Return the top_k most relevant chunks for a question.
     `where` can filter by metadata, e.g. {"scheme_name": "PM-Kisan"}.
+    `min_score` filters out chunks below a similarity threshold (0-1 range).
     """
     collection = get_collection()
     top_k = top_k or settings.TOP_K
+    min_score = min_score if min_score is not None else settings.MIN_RELEVANCE_SCORE
 
     results = collection.query(
         query_texts=[question],
@@ -75,11 +78,14 @@ def query(question: str, top_k: int | None = None, where: dict | None = None) ->
     distances = results.get("distances", [[]])[0]
 
     for doc, meta, dist in zip(docs, metas, distances):
+        score = 1 - dist
+        if score < min_score:
+            continue
         hits.append({
             "text": doc,
             "scheme_name": meta.get("scheme_name", "Unknown"),
             "source_file": meta.get("source_file", "Unknown"),
-            "score": 1 - dist,  # convert cosine distance to a similarity-like score
+            "score": score,
         })
     return hits
 

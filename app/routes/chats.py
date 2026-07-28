@@ -114,16 +114,21 @@ def send_message(
             }.items() if v is not None
         } or None
 
+   
     hits = vector_query(payload.question)
+
+if not hits:
+    answer = "I couldn't find a scheme confidently matching your question. Could you rephrase it or share more details (like your state, occupation, or what kind of support you're looking for)?"
+    follow_ups = []
+    sources = []
+else:
     answer = generate_answer(payload.question, hits, profile_dict)
     follow_ups = generate_follow_up_questions(
         question=payload.question, answer=answer, context_chunks=hits, language=payload.language,
     )
     sources = [
-        SourceChunk(
-            scheme_name=h["scheme_name"], source_file=h["source_file"],
-            text=h["text"], score=round(h["score"], 4),
-        )
+        SourceChunk(scheme_name=h["scheme_name"], source_file=h["source_file"],
+                    text=h["text"], score=round(h["score"], 4))
         for h in hits
     ]
 

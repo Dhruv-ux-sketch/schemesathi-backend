@@ -26,6 +26,7 @@ class Settings(BaseSettings):
 
     # Retrieval
     TOP_K: int = 4
+    MIN_RELEVANCE_SCORE: float = 0.35
     CHUNK_SIZE: int = 800        # characters per chunk
     CHUNK_OVERLAP: int = 120
 
