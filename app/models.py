@@ -79,3 +79,11 @@ class Bookmark(Base):
     created_at = Column(DateTime, default=_now)
 
     user = relationship("User", back_populates="bookmarks")
+class Scheme(Base):
+    __tablename__ = "schemes"
+
+    id = Column(String, primary_key=True, default=_uuid)
+    name = Column(String, unique=True, nullable=False, index=True)
+    official_url = Column(String, nullable=True)
+    source_file = Column(String, nullable=True)
+    created_at = Column(DateTime, default=_now)
