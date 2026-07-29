@@ -40,17 +40,44 @@ SAMPLE_SCHEMES_DIR = Path(__file__).resolve().parent.parent / "data" / "sample_s
 def on_startup():
     init_db()
 
-    # On free-tier hosting (e.g. Render), the disk is wiped on every cold
-    # start/restart, which would empty the vector database. Since the base
-    # scheme documents are bundled with the code (not the disk), we can
-    # safely re-index them automatically whenever the collection is empty.
-    # Schemes added later via the admin panel are NOT bundled with the code,
-    # so they will NOT survive a restart on free-tier hosting - see README.
     from app.rag.vector_store import list_schemes
-    from app.rag.ingest import ingest_directory
+    from app.rag.ingest import ingest_directory, extract_text, extract_official_url
+    from app.db import SessionLocal
+    from app.models import Scheme
+
+    def backfill_scheme_urls():
+        """Populate/refresh official_url in the Scheme table from the bundled
+        sample scheme files, without touching the vector store."""
+        if not SAMPLE_SCHEMES_DIR.exists():
+            return
+        db = SessionLocal()
+        try:
+            for path in SAMPLE_SCHEMES_DIR.glob("*"):
+                if path.suffix.lower() not in (".pdf", ".txt", ".md"):
+                    continue
+                scheme_name = path.stem.replace("_", " ").replace("-", " ").strip()
+                try:
+                    text = extract_text(str(path))
+                except Exception as e:
+                    print(f"[startup] Could not read {path.name}: {e}")
+                    continue
+                official_url = extract_official_url(text)
+                if not official_url:
+                    continue
+                existing = db.query(Scheme).filter(Scheme.name == scheme_name).first()
+                if existing:
+                    existing.official_url = official_url
+                    existing.source_file = path.name
+                else:
+                    db.add(Scheme(name=scheme_name, official_url=official_url, source_file=path.name))
+            db.commit()
+            print("[startup] Scheme URLs backfilled.")
+        finally:
+            db.close()
 
     if list_schemes():
         print("[startup] Vector store already has schemes indexed, skipping auto-ingest.")
+        backfill_scheme_urls()
         return
 
     if not SAMPLE_SCHEMES_DIR.exists():
@@ -62,8 +89,10 @@ def on_startup():
     if not summary:
         print(f"[startup] WARNING: no .pdf/.txt/.md files found in {SAMPLE_SCHEMES_DIR}")
     else:
-        for filename, count in summary.items():
-            print(f"[startup] Indexed {filename}: {count} chunks")
+        for filename, result in summary.items():
+            print(f"[startup] Indexed {filename}: {result['chunks_added']} chunks")
+
+    backfill_scheme_urls()
 
 
 app.include_router(chat.router)
