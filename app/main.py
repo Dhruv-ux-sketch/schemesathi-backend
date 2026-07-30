@@ -40,44 +40,33 @@ SAMPLE_SCHEMES_DIR = Path(__file__).resolve().parent.parent / "data" / "sample_s
 def on_startup():
     init_db()
 
+    # On free-tier hosting (e.g. Render), the disk is wiped on every cold
+    # start/restart, which would empty the vector database. Since the base
+    # scheme documents are bundled with the code (not the disk), we can
+    # safely re-index them automatically whenever the collection is empty.
+    # Schemes added later via the admin panel are NOT bundled with the code,
+    # so they will NOT survive a restart on free-tier hosting - see README.
     from app.rag.vector_store import list_schemes
-    from app.rag.ingest import ingest_directory, extract_text, extract_official_url
-    from app.db import SessionLocal
+    from app.rag.ingest import ingest_directory
     from app.models import Scheme
+    from app.db import get_db
 
-    def backfill_scheme_urls():
-        """Populate/refresh official_url in the Scheme table from the bundled
-        sample scheme files, without touching the vector store."""
-        if not SAMPLE_SCHEMES_DIR.exists():
-            return
-        db = SessionLocal()
-        try:
-            for path in SAMPLE_SCHEMES_DIR.glob("*"):
-                if path.suffix.lower() not in (".pdf", ".txt", ".md"):
-                    continue
-                scheme_name = path.stem.replace("_", " ").replace("-", " ").strip()
-                try:
-                    text = extract_text(str(path))
-                except Exception as e:
-                    print(f"[startup] Could not read {path.name}: {e}")
-                    continue
-                official_url = extract_official_url(text)
-                if not official_url:
-                    continue
-                existing = db.query(Scheme).filter(Scheme.name == scheme_name).first()
-                if existing:
-                    existing.official_url = official_url
-                    existing.source_file = path.name
-                else:
-                    db.add(Scheme(name=scheme_name, official_url=official_url, source_file=path.name))
-            db.commit()
-            print("[startup] Scheme URLs backfilled.")
-        finally:
-            db.close()
+    has_vector_data = bool(list_schemes())
 
-    if list_schemes():
-        print("[startup] Vector store already has schemes indexed, skipping auto-ingest.")
-        backfill_scheme_urls()
+    # Checking ChromaDB alone isn't enough: it and the SQL `schemes` table
+    # (which is what actually stores official_url, served by /schemes/urls)
+    # can get out of sync - e.g. chroma_db/ persists across a restart while
+    # schemesathi.db gets reset, or vice versa. If either store is missing
+    # official_url data, re-ingest so both stay consistent.
+    db_gen = get_db()
+    db = next(db_gen)
+    try:
+        has_url_data = db.query(Scheme).filter(Scheme.official_url.isnot(None)).first() is not None
+    finally:
+        db_gen.close()
+
+    if has_vector_data and has_url_data:
+        print("[startup] Vector store and scheme URLs already present, skipping auto-ingest.")
         return
 
     if not SAMPLE_SCHEMES_DIR.exists():
@@ -89,10 +78,14 @@ def on_startup():
     if not summary:
         print(f"[startup] WARNING: no .pdf/.txt/.md files found in {SAMPLE_SCHEMES_DIR}")
     else:
+        # NOTE: ingest_directory returns {filename: {"chunks_added": int, "official_url": str|None}}
+        # per file, not a plain chunk count - so we unpack the dict here instead of
+        # printing it raw (that was the earlier bug: `count` was the whole dict).
         for filename, result in summary.items():
-            print(f"[startup] Indexed {filename}: {result['chunks_added']} chunks")
-
-    backfill_scheme_urls()
+            print(
+                f"[startup] Indexed {filename}: {result['chunks_added']} chunks, "
+                f"official_url={result['official_url']!r}"
+            )
 
 
 app.include_router(chat.router)
