@@ -7,11 +7,37 @@ from app.rate_limit import limiter, CHAT_LIMIT
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
+# Fields that count toward "profile completion" — must match whatever
+# your frontend uses to calculate the % shown to the user, or the two
+# numbers will disagree.
+PROFILE_FIELDS = ["name", "state", "age", "occupation", "annual_income", "gender", "category"]
+
+
+def _profile_completion(profile_dict: dict | None) -> float:
+    if not profile_dict:
+        return 0.0
+    filled = sum(1 for f in PROFILE_FIELDS if profile_dict.get(f) not in (None, ""))
+    return round(filled / len(PROFILE_FIELDS) * 100)
+
 
 @router.post("", response_model=ChatResponse)
 @limiter.limit(CHAT_LIMIT)
 def chat(request: Request, payload: ChatRequest) -> ChatResponse:
     profile_dict = payload.profile.model_dump(exclude_none=True) if payload.profile else None
+    completion = _profile_completion(profile_dict)
+
+    if completion == 0:
+        return ChatResponse(
+            answer=(
+                "Your profile is 0% complete, so I can't check which schemes "
+                "actually suit you yet — I'd just be guessing from your question "
+                "text. Please complete your profile (state, age, occupation, "
+                "income, gender, category) first, and I'll give you accurate, "
+                "personalized recommendations."
+            ),
+            sources=[],
+            follow_up_questions=[],
+        )
 
     # 1. Retrieve relevant chunks from ChromaDB (local embeddings, no API key)
     hits = vector_query(payload.question)
