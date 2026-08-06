@@ -12,6 +12,7 @@ from app.schemas import (
 )
 from app.rag.vector_store import query as vector_query
 from app.rag.llm import generate_answer, generate_follow_up_questions
+from app.rag.profile_utils import profile_completion
 from app.rate_limit import limiter, CHAT_LIMIT
 
 router = APIRouter(prefix="/chats", tags=["chat-history"])
@@ -105,6 +106,7 @@ def send_message(
     else:
         profile_dict = {
             k: v for k, v in {
+                "name": current_user.name,
                 "state": current_user.state,
                 "age": current_user.age,
                 "occupation": current_user.occupation,
@@ -114,7 +116,25 @@ def send_message(
             }.items() if v is not None
         } or None
 
-   
+    completion = profile_completion(profile_dict)
+    if completion == 0:
+        answer = (
+            "Your profile is 0% complete, so I can't check which schemes "
+            "actually suit you yet — I'd just be guessing from your question "
+            "text. Please complete your profile (state, age, occupation, "
+            "income, gender, category) first, and I'll give you accurate, "
+            "personalized recommendations."
+        )
+        db.add(Message(chat_id=chat.id, role="user", content=payload.question))
+        db.add(Message(
+            chat_id=chat.id, role="assistant", content=answer,
+            sources_json="[]", follow_up_questions_json="[]",
+        ))
+        if chat.title == "New chat":
+            chat.title = payload.question[:60]
+        db.commit()
+        return ChatResponse(answer=answer, sources=[], follow_up_questions=[])
+
     hits = vector_query(payload.question)
 
     if not hits:
